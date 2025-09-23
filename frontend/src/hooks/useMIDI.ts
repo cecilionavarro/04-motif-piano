@@ -11,19 +11,35 @@ export const useMIDI = (
             navigator.requestMIDIAccess().then((midiAccess) => {
                 // loop through midiAccess
                 // console.log(midiAccess);
-                for (let input of midiAccess.inputs.values()) {
-                    // console.log(input.name)
-                    input.onmidimessage = (message) => {
-                        // console.log(message.data)
-                        //destructure
+                // for (let input of midiAccess.inputs.values()) {
+                //     // console.log(input.name)
+                //     input.onmidimessage = (message) => {
+                //         // console.log(message.data)
+                //         //destructure
+                //         const [command, note, velocity] = message.data;
+
+                //         if (command == 144 && velocity > 0) {
+                //             onNoteOn(note);
+                //         }
+                //         if (
+                //             command == 128 ||
+                //             (command == 144 && velocity == 0)
+                //         ) {
+                //             onNoteOff(note);
+                //         }
+                //     };
+                // }
+                const firstInput = midiAccess.inputs.values().next().value;
+                if (firstInput) {
+                    firstInput.onmidimessage = (message) => {
                         const [command, note, velocity] = message.data;
 
-                        if (command == 144 && velocity > 0) {
+                        if (command === 144 && velocity > 0) {
                             onNoteOn(note);
                         }
                         if (
-                            command == 128 ||
-                            (command == 144 && velocity == 0)
+                            command === 128 ||
+                            (command === 144 && velocity === 0)
                         ) {
                             onNoteOff(note);
                         }
@@ -31,7 +47,7 @@ export const useMIDI = (
                 }
             });
         } else {
-            console.warn("Web MIDI API not supported in this browser.")
+            console.warn("Web MIDI API not supported in this browser.");
         }
     }, [onNoteOn, onNoteOff]);
 };

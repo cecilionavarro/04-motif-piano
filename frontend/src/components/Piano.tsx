@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Note from "./Note";
 import { useMIDI } from "../hooks/useMIDI";
 
@@ -23,27 +23,41 @@ const blackKeyLeftMargin = blackKeyWidth / 2;
 const blackKeyRightMargin = blackKeyWidth / 2;
 
 const Piano = () => {
-  const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set())
+  const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
 
-  const handleNoteOn = (note: number) => {
+  // log my set
+  // useEffect(() => {
+  //   console.log("Active notes:", Array.from(activeNotes));
+  // }, [activeNotes]);
+
+  const handleNoteOn = useCallback((note: number) => {
     console.log(note)
-  }
+    setActiveNotes((prev) => new Set(prev).add(note));
+  }, []);
 
-  const handleNoteOff = (note: number) => {
+  const handleNoteOff = useCallback((note: number) => {
     console.log(note)
-  }
+    setActiveNotes((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(note);
+      return newSet;
+    });
+  }, []);
 
-  useMIDI(handleNoteOn, handleNoteOff)
+  useMIDI(handleNoteOn, handleNoteOff);
+
   return (
     <div className="flex" style={{ width: pianoWidth }}>
       {Array.from({ length: noteCount }, (_, i) => {
         const noteId = firstNote + i;
-        const isBlack = isBlackKey(noteId)
+        const isBlack = isBlackKey(noteId);
+        const isActive = activeNotes.has(noteId);
         return (
           <Note
             key={noteId}
             width={isBlack ? blackKeyWidth : whiteKeyWidth}
             isBlack={isBlack}
+            isActive={isActive}
             leftMargin={blackKeyLeftMargin}
             rightMargin={blackKeyRightMargin}
           />
