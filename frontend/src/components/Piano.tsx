@@ -26,12 +26,19 @@ const Piano = () => {
   const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
   const [sustainedNotes, setSustainedNotes] = useState<Set<number>>(new Set());
   const [sustainDown, setSustainDown] = useState(false);
+
   const activeNotesRef = useRef<Set<number>>(activeNotes);
+  const sustainDownRef = useRef<Boolean>(sustainDown);
 
   // log my set
   useEffect(() => {
     console.log("Active notes:", Array.from(activeNotes));
   }, [activeNotes]);
+
+  useEffect(() => {
+    sustainDownRef.current = sustainDown;
+  }, [sustainDown])
+
   useEffect(() => {
     console.log("Sustained notes:", Array.from(sustainedNotes));
   }, [sustainedNotes]);
@@ -56,14 +63,15 @@ const Piano = () => {
     });
   }, []);
 
-  const handleSustainChange = useCallback(
-    (down: boolean) => {
+  const handleSustainChange = useCallback((down: boolean) => {
+    setSustainDown(down);
+    if (down) {
       setSustainedNotes(new Set(activeNotesRef.current));
-      setSustainDown(down);
-      console.log("Sustain pedal:", down ? "DOWN" : "UP");
-    },
-    [sustainDown]
-  );
+    } else {
+      setSustainedNotes(new Set());
+    }
+    console.log("Sustain pedal:", down ? "DOWN" : "UP");
+  }, []);
 
   useMIDI(handleNoteOn, handleNoteOff, handleSustainChange);
 
