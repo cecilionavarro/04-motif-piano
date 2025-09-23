@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Note from "./Note";
 import { useMIDI } from "../hooks/useMIDI";
 
@@ -24,27 +24,48 @@ const blackKeyRightMargin = blackKeyWidth / 2;
 
 const Piano = () => {
   const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
+  const [sustainedNotes, setSustainedNotes] = useState<Set<number>>(new Set());
+  const [sustainDown, setSustainDown] = useState(false);
+  const activeNotesRef = useRef<Set<number>>(activeNotes);
 
   // log my set
-  // useEffect(() => {
-  //   console.log("Active notes:", Array.from(activeNotes));
-  // }, [activeNotes]);
+  useEffect(() => {
+    console.log("Active notes:", Array.from(activeNotes));
+  }, [activeNotes]);
+  useEffect(() => {
+    console.log("Sustained notes:", Array.from(sustainedNotes));
+  }, [sustainedNotes]);
 
   const handleNoteOn = useCallback((note: number) => {
-    console.log(note)
-    setActiveNotes((prev) => new Set(prev).add(note));
-  }, []);
-
-  const handleNoteOff = useCallback((note: number) => {
-    console.log(note)
+    // console.log(note)
     setActiveNotes((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(note);
-      return newSet;
+      const next = new Set(prev);
+      next.add(note);
+      activeNotesRef.current = next;
+      return next;
     });
   }, []);
 
-  useMIDI(handleNoteOn, handleNoteOff);
+  const handleNoteOff = useCallback((note: number) => {
+    // console.log(note)
+    setActiveNotes((prev) => {
+      const next = new Set(prev);
+      next.delete(note);
+      activeNotesRef.current = next;
+      return next;
+    });
+  }, []);
+
+  const handleSustainChange = useCallback(
+    (down: boolean) => {
+      setSustainedNotes(new Set(activeNotesRef.current));
+      setSustainDown(down);
+      console.log("Sustain pedal:", down ? "DOWN" : "UP");
+    },
+    [sustainDown]
+  );
+
+  useMIDI(handleNoteOn, handleNoteOff, handleSustainChange);
 
   return (
     <div className="flex" style={{ width: pianoWidth }}>
@@ -52,12 +73,15 @@ const Piano = () => {
         const noteId = firstNote + i;
         const isBlack = isBlackKey(noteId);
         const isActive = activeNotes.has(noteId);
+        const isSustained = sustainedNotes.has(noteId);
+
         return (
           <Note
             key={noteId}
             width={isBlack ? blackKeyWidth : whiteKeyWidth}
             isBlack={isBlack}
             isActive={isActive}
+            isSustained={isSustained}
             leftMargin={blackKeyLeftMargin}
             rightMargin={blackKeyRightMargin}
           />

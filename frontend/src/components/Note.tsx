@@ -2,14 +2,24 @@ export interface noteProps {
   width: number;
   isBlack: boolean;
   isActive?: boolean;
+  isSustained?: boolean;
   leftMargin?: number;
   rightMargin?: number;
 }
-const Note = ({ width, isBlack, isActive, leftMargin, rightMargin }: noteProps) => {
+const Note = ({ width, isBlack, isActive, isSustained, leftMargin, rightMargin }: noteProps) => {
+  let colorClass = "";
+  if (isActive) {
+    colorClass = "bg-blue-500";
+  } else if (isSustained) {
+    colorClass = "bg-blue-200";
+  } else {
+    colorClass = isBlack ? "bg-black" : "bg-gray-50"
+  }
+  
   if (isBlack) {
     return (
       <div
-        className={`${isActive ? "bg-blue-500 " : "bg-black"} outline z-1 h-40 `}
+        className={`${colorClass} outline z-1 h-40 `}
         style={{
           width,
           marginLeft: `-${leftMargin}px`,
@@ -20,7 +30,7 @@ const Note = ({ width, isBlack, isActive, leftMargin, rightMargin }: noteProps) 
   }
   return (
     <div
-      className={`${isActive ? "bg-blue-500" : "bg-gray-50" } outline h-70 `}
+      className={`${colorClass} outline h-70 `}
       style={{
         width,
       }}

@@ -3,7 +3,8 @@ import { useEffect } from "react";
 // call back functions called when I use the hook
 export const useMIDI = (
     onNoteOn: (note: number) => void,
-    onNoteOff: (note: number) => void
+    onNoteOff: (note: number) => void,
+    onSustainChange?: (down: boolean) => void
 ) => {
     useEffect(() => {
         // request for midi access
@@ -38,10 +39,14 @@ export const useMIDI = (
                             onNoteOn(note);
                         }
                         if (
-                            command === 128 ||
-                            (command === 144 && velocity === 0)
+                            command === 128 || (command === 144 && velocity === 0)
                         ) {
                             onNoteOff(note);
+                        }
+                        //sustain pedal
+                        if (command === 176 && note === 64) {
+                            if (onSustainChange) onSustainChange(velocity < 63);
+                            return
                         }
                     };
                 }
@@ -49,5 +54,5 @@ export const useMIDI = (
         } else {
             console.warn("Web MIDI API not supported in this browser.");
         }
-    }, [onNoteOn, onNoteOff]);
+    }, [onNoteOn, onNoteOff, onSustainChange]);
 };
