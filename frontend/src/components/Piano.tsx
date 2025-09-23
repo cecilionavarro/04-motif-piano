@@ -34,7 +34,7 @@ const Piano = () => {
   useEffect(() => {
     console.log("Active notes:", Array.from(activeNotes));
   }, [activeNotes]);
-
+  
   useEffect(() => {
     sustainDownRef.current = sustainDown;
   }, [sustainDown])
@@ -49,6 +49,13 @@ const Piano = () => {
       const next = new Set(prev);
       next.add(note);
       activeNotesRef.current = next;
+      return next;
+    });
+
+    setSustainedNotes((prev) => {
+      if (!sustainDownRef.current) return prev;
+      const next = new Set(prev);
+      next.add(note);
       return next;
     });
   }, []);
