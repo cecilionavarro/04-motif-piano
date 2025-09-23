@@ -1,4 +1,5 @@
-import Piano from "../components/piano";
+import Piano from "../components/Piano";
+
 
 const Home = () => {
   return (

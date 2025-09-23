@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Note from "./Note";
+import { useMIDI } from "../hooks/useMIDI";
 
 const firstNote = 48;
 const lastNote = 72;
@@ -21,11 +23,22 @@ const blackKeyLeftMargin = blackKeyWidth / 2;
 const blackKeyRightMargin = blackKeyWidth / 2;
 
 const Piano = () => {
+  const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set())
+
+  const handleNoteOn = (note: number) => {
+    console.log(note)
+  }
+
+  const handleNoteOff = (note: number) => {
+    console.log(note)
+  }
+
+  useMIDI(handleNoteOn, handleNoteOff)
   return (
     <div className="flex" style={{ width: pianoWidth }}>
       {Array.from({ length: noteCount }, (_, i) => {
         const noteId = firstNote + i;
-        const isBlack = isBlackKey(noteId);
+        const isBlack = isBlackKey(noteId)
         return (
           <Note
             key={noteId}
