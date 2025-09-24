@@ -57,7 +57,7 @@ ns1.vercel-dns.com
 ns2.vercel-dns.com
 ```
 ### Development Notes (Hackathon Log)
-This project was built during a self-hackathon (Sept 23). Notes captured throughout the build:
+This project was built during a self-hackathon. Notes captured throughout the build:
 - Frontend First: Started with React + Vite + Tailwind, later will add backend (Spring Boot).
 - Core Piano: Built piano with white & black keys using dynamic calculations for widths and positions.
 - Modes System: Created modular hooks (useNormalMode, useTouchMode, usePianoModes).

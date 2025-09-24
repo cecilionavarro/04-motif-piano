@@ -26,7 +26,7 @@ export const useMIDI = (
             return;
         }
 
-        let firstInput: WebMidi.MIDIInput | null = null;
+        // let firstInput: WebMidi.MIDIInput | null = null;
 
         const handleMessage = (message: WebMidi.MIDIMessageEvent) => {
             const [command, note, velocity] = message.data;
@@ -46,14 +46,20 @@ export const useMIDI = (
                 return;
             }
         };
-
         navigator.requestMIDIAccess().then((midiAccess) => {
-            const it = midiAccess.inputs.values();
-            firstInput = it.next().value ?? null;
-            if (firstInput) {
-                firstInput.onmidimessage = handleMessage;
+            for (let input of midiAccess.inputs.values()) {
+                console.log("Listening to MIDI device:", input.name);
+                input.onmidimessage = handleMessage
             }
-        });
+        })
+
+        // navigator.requestMIDIAccess().then((midiAccess) => {
+        //     const it = midiAccess.inputs.values();
+        //     firstInput = it.next().value ?? null;
+        //     if (firstInput) {
+        //         firstInput.onmidimessage = handleMessage;
+        //     }
+        // });
     }, []);
 };
 

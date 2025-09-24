@@ -13,7 +13,7 @@ export function useNormalMode(): ModeAPI {
 
     // log my set
     useEffect(() => {
-        // console.log("Active notes:", Array.from(activeNotes));
+        console.log("Active notes:", Array.from(activeNotes));
     }, [activeNotes]);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export function useNormalMode(): ModeAPI {
     }, [sustainDown]);
 
     useEffect(() => {
-        // console.log("Sustained notes:", Array.from(sustainedNotes));
+        console.log("Sustained notes:", Array.from(sustainedNotes));
     }, [sustainedNotes]);
 
     const handleNoteOn = useCallback((note: number) => {
