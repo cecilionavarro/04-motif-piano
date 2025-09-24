@@ -13,8 +13,16 @@ export function useTouchMode(firstNote: number, lastNote: number): ModeAPI {
         targetRef.current = target;
     }, [target])
 
-    const getNewTarget = useCallback(() => {
-        let next = randomNote(firstNote, lastNote)
+    const getNewTarget = useCallback((previous?: number) => {
+        let lower: number = firstNote
+        let upper: number = lastNote
+        if (previous) {
+            lower = previous - 10
+            upper = previous + 10
+            if (lower < firstNote) lower = firstNote
+            if (upper > lastNote) upper = lastNote
+        }
+        let next = randomNote(lower, upper)
         setTarget(next)
     }, [firstNote, lastNote])
     
@@ -29,7 +37,7 @@ export function useTouchMode(firstNote: number, lastNote: number): ModeAPI {
         // console.log("target: ", current)
         if (current != null && note === current) {
             console.log("hey you found the note!", note, "===", current)
-            getNewTarget();
+            getNewTarget(current);
         }
     }, [getNewTarget]);
 

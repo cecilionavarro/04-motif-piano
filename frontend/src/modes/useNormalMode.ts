@@ -25,7 +25,7 @@ export function useNormalMode(): ModeAPI {
     }, [sustainedNotes]);
 
     const handleNoteOn = useCallback((note: number) => {
-        // console.log(note)
+        console.log("note on: ", note)
         setActiveNotes((prev) => {
             const next = new Set(prev);
             next.add(note);
@@ -42,7 +42,7 @@ export function useNormalMode(): ModeAPI {
     }, []);
 
     const handleNoteOff = useCallback((note: number) => {
-        // console.log(note)
+        console.log("note off: ", note)
         setActiveNotes((prev) => {
             const next = new Set(prev);
             next.delete(note);
