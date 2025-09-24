@@ -3,8 +3,6 @@ import type { NoteVisual } from "../modes/types";
 export interface noteProps {
   width: number;
   isBlack: boolean;
-  // isActive?: boolean;
-  // isSustained?: boolean;
   leftMargin?: number;
   rightMargin?: number;
   visual?: NoteVisual;

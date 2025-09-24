@@ -1,18 +1,20 @@
 import { useMemo } from "react";
 import type { ModeAPI, PianoMode } from "../modes/types";
 import { useNormalMode } from "../modes/useNormalMode";
+import { useTouchMode } from "../modes/useTouchMode";
 
-export function usePianoModes(mode: PianoMode): ModeAPI {
+export function usePianoModes(mode: PianoMode, firstNote: number, lastNote: number): ModeAPI {
     const normal = useNormalMode();
-    // const touch = useTouch(first)
+    const touch = useTouchMode(firstNote, lastNote);
 
     const active: ModeAPI = useMemo<ModeAPI>(() => {
         switch (mode) {
-            // case PianoMode.Touch: return touch;
+            case "touch":
+                return touch
             case "normal":
             default:
                 return normal;
         }
-    }, [mode, normal]);
+    }, [mode, normal, touch]);
     return active
 }

@@ -3,7 +3,7 @@ import Note from "./Note";
 import { useMIDI } from "../hooks/useMIDI";
 import type { PianoMode } from "../modes/types";
 import { usePianoModes } from "../hooks/usePianoModes";
-import Select from "./PianoModeSelect";
+import PianoModeSelect from "./PianoModeSelect";
 
 const firstNote = 28;
 const lastNote = 105;
@@ -27,7 +27,7 @@ const blackKeyRightMargin = blackKeyWidth / 2;
 
 const Piano = () => {
   const [mode, setMode] = useState<PianoMode>("normal");
-  const activeMode = usePianoModes(mode);
+  const activeMode = usePianoModes(mode, firstNote, lastNote);
 
   useMIDI(
     activeMode.handleNoteOn,
@@ -38,20 +38,16 @@ const Piano = () => {
   return (
     // keyboard
     <div className="flex flex-col gap-5">
-      <Select/>
+      <PianoModeSelect value={mode} onChange={setMode}/>
       <div className="flex border rounded-sm" style={{ width: pianoWidth }}>
         {Array.from({ length: noteCount }, (_, i) => {
           const noteId = firstNote + i;
           const isBlack = isBlackKey(noteId);
-          // const isActive = activeNotes.has(noteId);
-          // const isSustained = sustainedNotes.has(noteId);
           return (
             <Note
               key={noteId}
               width={isBlack ? blackKeyWidth : whiteKeyWidth}
               isBlack={isBlack}
-              // isActive={isActive}
-              // isSustained={isSustained}
               leftMargin={blackKeyLeftMargin}
               rightMargin={blackKeyRightMargin}
               visual={activeMode.getVisualFor(noteId)}

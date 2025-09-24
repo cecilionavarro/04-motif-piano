@@ -2,13 +2,9 @@ import type { ReactNode } from "react";
 
 export type PianoMode = "normal" | "touch";
 
-export type NoteVisual =
-    | { type: "none" }
-    | { type: "active" }
-    | { type: "sustained" }
-    | { type: "target" }
-    | { type: "correct" }
-    | { type: "wrong" };
+export type VisualType = "none" | "active" | "sustained" | "target" | "correct" | "wrong";
+
+export type NoteVisual = { type: VisualType }
 
 export interface ModeAPI {
     handleNoteOn(note: number): void;
