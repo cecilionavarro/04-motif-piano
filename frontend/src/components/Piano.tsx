@@ -3,6 +3,7 @@ import Note from "./Note";
 import { useMIDI } from "../hooks/useMIDI";
 import type { PianoMode } from "../modes/types";
 import { usePianoModes } from "../hooks/usePianoModes";
+import Select from "./PianoModeSelect";
 
 const firstNote = 28;
 const lastNote = 105;
@@ -18,39 +19,46 @@ const whiteKeyCount = Array.from(
   (_, i) => firstNote + i
 ).filter((noteId) => !isBlackKey(noteId)).length;
 
-const pianoWidth = 1800;
+const pianoWidth = 1650;
 const whiteKeyWidth = pianoWidth / whiteKeyCount;
-const blackKeyWidth = whiteKeyWidth * 0.6;
+const blackKeyWidth = whiteKeyWidth * 0.5;
 const blackKeyLeftMargin = blackKeyWidth / 2;
 const blackKeyRightMargin = blackKeyWidth / 2;
 
 const Piano = () => {
-  const [mode, setMode] = useState<PianoMode>("normal")
+  const [mode, setMode] = useState<PianoMode>("normal");
   const activeMode = usePianoModes(mode);
 
-  useMIDI(activeMode.handleNoteOn, activeMode.handleNoteOff, activeMode.handleSustainChange);
+  useMIDI(
+    activeMode.handleNoteOn,
+    activeMode.handleNoteOff,
+    activeMode.handleSustainChange
+  );
 
   return (
     // keyboard
-    <div className="flex" style={{ width: pianoWidth }}>
-      {Array.from({ length: noteCount }, (_, i) => {
-        const noteId = firstNote + i;
-        const isBlack = isBlackKey(noteId);
-        // const isActive = activeNotes.has(noteId);
-        // const isSustained = sustainedNotes.has(noteId);
-        return (
-          <Note
-            key={noteId}
-            width={isBlack ? blackKeyWidth : whiteKeyWidth}
-            isBlack={isBlack}
-            // isActive={isActive}
-            // isSustained={isSustained}
-            leftMargin={blackKeyLeftMargin}
-            rightMargin={blackKeyRightMargin}
-            visual={activeMode.getVisualFor(noteId)}
-          />
-        );
-      })}
+    <div className="flex flex-col gap-5">
+      <Select/>
+      <div className="flex border rounded-sm" style={{ width: pianoWidth }}>
+        {Array.from({ length: noteCount }, (_, i) => {
+          const noteId = firstNote + i;
+          const isBlack = isBlackKey(noteId);
+          // const isActive = activeNotes.has(noteId);
+          // const isSustained = sustainedNotes.has(noteId);
+          return (
+            <Note
+              key={noteId}
+              width={isBlack ? blackKeyWidth : whiteKeyWidth}
+              isBlack={isBlack}
+              // isActive={isActive}
+              // isSustained={isSustained}
+              leftMargin={blackKeyLeftMargin}
+              rightMargin={blackKeyRightMargin}
+              visual={activeMode.getVisualFor(noteId)}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
