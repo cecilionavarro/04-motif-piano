@@ -42,7 +42,7 @@ export const useMIDI = (
             }
 
             if (command === 176 && note === 64) {
-                onSustainChangeRef.current?.(velocity < 63);
+                onSustainChangeRef.current?.(velocity >= 63);
                 return;
             }
         };

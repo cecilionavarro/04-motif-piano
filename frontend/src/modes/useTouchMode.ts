@@ -23,6 +23,9 @@ export function useTouchMode(firstNote: number, lastNote: number): ModeAPI {
             if (upper > lastNote) upper = lastNote
         }
         let next = randomNote(lower, upper)
+        while (next === previous) {
+            next = randomNote(lower, upper)
+        }
         setTarget(next)
     }, [firstNote, lastNote])
     
